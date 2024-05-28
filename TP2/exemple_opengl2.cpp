@@ -18,18 +18,18 @@ struct Vertex
 
 struct Application
 {
-    GLShader m_basicProgram;
+    GLShader g_BasicShader;
 
     void Initialize()
     {
-        m_basicProgram.LoadVertexShader("basic.vs.glsl");
-        m_basicProgram.LoadFragmentShader("basic.fs.glsl");
-        m_basicProgram.Create();
+        g_BasicShader.LoadVertexShader("basic.vs.glsl");
+        g_BasicShader.LoadFragmentShader("basic.fs.glsl");
+        g_BasicShader.Create();
     }
 
     void Terminate()
     {
-        m_basicProgram.Destroy();
+        g_BasicShader.Destroy();
     }
 
     void Render()
@@ -37,7 +37,7 @@ struct Application
 		//glClearColor(1.f, 1.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        uint32_t program = m_basicProgram.GetProgram();
+        uint32_t program = g_BasicShader.GetProgram();
         glUseProgram(program);
 
         double time = glfwGetTime();

@@ -14,55 +14,69 @@ struct vec4 { float x, y, z, w; };
 struct Vertex
 {
     vec2 position;
+    vec3 color;
 };
 
 struct Application
 {
-    GLShader m_basicProgram;
+    GLShader g_BasicShader;
 
     void Initialize()
     {
-        m_basicProgram.LoadVertexShader("basic.vs.glsl");
-        m_basicProgram.LoadFragmentShader("basic.fs.glsl");
-        m_basicProgram.Create();
+        g_BasicShader.LoadVertexShader("basic.vs.glsl");
+        g_BasicShader.LoadFragmentShader("basic.fs.glsl");
+        g_BasicShader.Create();
+        // GLuint vao;
+        // glGenVertexArrays(1, &vao);
+        // glBindVertexArray(vao);
     }
 
     void Terminate()
     {
-        m_basicProgram.Destroy();
+        g_BasicShader.Destroy();
     }
 
-    void Render()
+    void Render(int width, int height)
     { 
-		//glClearColor(1.f, 1.f, 0.f, 1.f);
+        // etape a. A vous de recuperer/passer les variables width/height
+        glViewport(0, 0, width, height);
+        
+        // etape b. Notez que glClearColor est un etat, donc persistant
+        glClearColor(1.f, 1.f, 1.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        uint32_t program = m_basicProgram.GetProgram();
-        glUseProgram(program);
+        // etape c. on specifie le shader program a utiliser
+        uint32_t basicProgram = g_BasicShader.GetProgram();
+        glUseProgram(basicProgram);
 
-        double time = glfwGetTime();
-        int timeLocation = glGetUniformLocation(program, "u_Time");
-        glUniform1f(timeLocation, static_cast<float>(time));
-
-		const std::vector<Vertex> triangles =
+        // etape d.
+		const std::vector<Vertex> triangle =
 		{
-			{ { 0.0f, 0.5f } },    // sommet 0
-			{ { -0.5f, -0.5f } },  // sommet 1
-			{ { 0.5f, -0.5f } },   // sommet 2
+			{ { 0.0f, 0.5f }, {1.0, 1.0, 0.0} },    // sommet 0
+			{ { -0.5f, -0.5f }, {1.0, 0.0, 0.0} },  // sommet 1
+			{ { 0.5f, -0.5f }, {0.0, 1.0, 1.0} },   // sommet 2
 		};
-		//GLuint == uint32_t
-		//GLushort == uint16_t
-		const uint16_t indices[] = { 0, 1, 2 };
 
-		// {[x, y], [r, g, b]}
-		const int POSITION = glGetAttribLocation(program, "a_Position");
-		if (POSITION < 0)
-			std::cout << "erreur de programme";
-		glVertexAttribPointer(POSITION, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex)/*stride*/, triangles.data());
-		glEnableVertexAttribArray(POSITION);
+        // etape e.
+        int loc_position = glGetAttribLocation(basicProgram, "a_Position");
+        glEnableVertexAttribArray(loc_position);
+        glVertexAttribPointer(loc_position, 2, GL_FLOAT, false, sizeof(Vertex), triangle.data());
 
-        //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, indices);
+        int loc_color = glGetAttribLocation(basicProgram, "a_Color");
+        glEnableVertexAttribArray(loc_color);
+        glVertexAttribPointer(loc_color, 3, GL_FLOAT, false, sizeof(Vertex), &triangle[0].color);
+
+        // etape f. dessin de triangles dont la definition provient d’un tableau
+        
+
+
+
+
+        // le rendu s’effectue ici en prenant 3 sommets a partir du debut du tableau (0)
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        // on suppose que la phase d’echange des buffers front et back
+        // le « swap buffers » est effectuee juste apres
+
     }
 };
 
@@ -77,6 +91,8 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
+    int width = 640;
+    int height = 480;
     window = glfwCreateWindow(640, 480, "Exemple OpenGL 2.+", NULL, NULL);
     if (!window)
     {
@@ -100,7 +116,7 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {        
         /* Render here */
-        app.Render();
+        app.Render(width, height);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

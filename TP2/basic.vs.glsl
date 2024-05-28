@@ -6,6 +6,7 @@
 // attribute fait le lien avec
 // glVertexAttrib ou glVertexAttribPointer
 attribute vec2 a_Position; // canal ?
+attribute vec3 a_Color;
 
 // valeur constante durant le rendu de la primitive
 uniform float u_Time;
@@ -22,7 +23,8 @@ void main()
 	pos.x += sin(u_Time);
 	
 	// exemple de selection, on affecte pos.xy a v_Color.rb (eq. v_Color.xz)
-	v_Color.rb = (pos + 1.0) / 2.0;
+	// v_Color.rb = (pos + 1.0) / 2.0;
+	v_Color = a_Color;
 
     gl_Position = vec4(pos, 0.0, 1.0);
 }

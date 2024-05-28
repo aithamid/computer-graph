@@ -8,10 +8,10 @@ CXXFLAGS = -Wall -std=c++17
 LIBS = -lGL -lglfw -lGLEW
 
 # Define the source files
-SRCS = exemple_opengl2.cpp ./common/GLShader.cpp
+SRCS = main.cpp ./common/GLShader.cpp
 
 # Define the output executable
-TARGET = exemple
+TARGET = main
 
 # Default target
 all: $(TARGET)
