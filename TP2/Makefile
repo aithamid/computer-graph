@@ -8,10 +8,10 @@ CXXFLAGS = -Wall -std=c++17
 LIBS = -lGL -lglfw -lGLEW
 
 # Define the source files
-SRCS = main.cpp ./common/GLShader.cpp
+SRCS = vao.cpp ./common/GLShader.cpp
 
 # Define the output executable
-TARGET = main
+TARGET = vao
 
 # Default target
 all: $(TARGET)

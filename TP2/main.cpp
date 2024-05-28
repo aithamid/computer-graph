@@ -65,14 +65,7 @@ struct Application
         int loc_color = glGetAttribLocation(basicProgram, "a_Color");
         glEnableVertexAttribArray(loc_color);
         glVertexAttribPointer(loc_color, 3, GL_FLOAT, false, sizeof(Vertex), &triangle[0].color);
-
-        // etape f. dessin de triangles dont la definition provient d’un tableau
         
-
-
-
-
-        // le rendu s’effectue ici en prenant 3 sommets a partir du debut du tableau (0)
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // on suppose que la phase d’echange des buffers front et back
         // le « swap buffers » est effectuee juste apres
